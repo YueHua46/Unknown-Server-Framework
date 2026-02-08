@@ -7,7 +7,7 @@
 基于原版MinecraftBedrockEdition ScriptAPI
 
 当前开源版本：0.7.10Fix  
-最新版本：__USF0.7.14C__  
+最新版本：__USF0.7.19__  
 插件所有版本请查看YYTZ666/usfdown仓库内文件  
 [https://github.com/YYTZ666/usfdown/tree/main/files/main](https://github.com/YYTZ666/usfdown/tree/main/files/main)   
  
