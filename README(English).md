@@ -1,6 +1,8 @@
 UnknowServerFramework (USF)
 
-__ This README translated by AI tools,All article may not right.And USF don't support English now. __
+> [!IMPORTANT]
+> This README translated by AI tools,All article may not right.And USF don't support English now.   
+> If you want to use USF,you can modify it as long as you comply with the GPL license.
 
 Based on the original Minecraft Bedrock Edition Gametest
 
