@@ -12,11 +12,14 @@
 [https://github.com/YYTZ666/usfdown/tree/main/files/main](https://github.com/YYTZ666/usfdown/tree/main/files/main)   
  
 适用于MinecraftBE官方服务端(BDS)、个人存档、LLSE和Realms的生存辅助向、服务器管理插件  
-作者：EarthDLL(USFrameTeam)、XiaoXiaoYang、Antonbin(社区贡献者)
 
-
+作者：EarthDLL(USFrameTeam)
+维护: USFrameTeam  
+感谢以下社区贡献者的维护  
+XiaoXiaoYang、Antonbin、小洋骢  
 特别鸣谢：交流群全体成员  
-官方发布的资源地址:
+官方发布的资源地址:  
+
 __https://www.minebbs.com/threads/usf.17109/__  
 __https://klpbbs.com/thread-131213-1-1.html__
 
@@ -30,11 +33,6 @@ USF文档站(官方站点)
 ——
 域名: https://usfdocs.usframeteam.top/  
 https://docs.usframeteam.top/  
-https://www.usfpack.site/  
-
-备份站:https://usframeteam.github.io/  
-(GithubPage，稳定访问，DDOS时备份)
-一般问题文档里都有，来群里问也没有用
 
 ## USF下载站
 主域名: d.usframeteam.top
