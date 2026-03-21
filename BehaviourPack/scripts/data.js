@@ -52,6 +52,7 @@ export const usf_config = {
         "world" : false,
         "group" : false,
         "random_end" : true,
+        "animation": false,
     },
     "board" : {
         "able" : false,

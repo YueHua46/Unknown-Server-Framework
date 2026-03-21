@@ -3,6 +3,8 @@ import * as mc from "@minecraft/server";
 import * as t from "./text.js";
 import { btnBar, infoBar, arrayEditor } from "./ui.js";
 import { ui_icon, usf_config, data_format, pictures } from "./data.js";
+import { performTeleportAnimation } from "./TpAni.js";
+import { tpWithAnimation } from "./TpAni.js";
 
 var config = {};
 var dictionary = {};
@@ -29,8 +31,8 @@ system.run(() => {
   dimensions = [overworld, nether, end];
 });
 
-const version_code = "0.7.10S";
-const version_text = `欢迎使用无名氏服务器框架\n插件版本:${version_code}\n作者：EarthDLL(USFrameTeam)，感谢所有社区贡献者的贡献`;
+const version_code = "0.7.19B";
+const version_text = `欢迎使用无名氏服务器框架\n插件版本:${version_code}\n作者：EarthDLL(USFrameTeam)，感谢所有社区贡献者的贡献\n快速适配版本，如有Bug，及时反馈`;
 
 //命名空间
 const namespace = "usfV2:";
@@ -110,55 +112,33 @@ system.afterEvents.scriptEventReceive.subscribe(scriptEventReceive, {
   "namespaces": ["usf"]
 });
 
-import("@minecraft/server-net").then((http) => {
-  push_text("log.enable", "当前日志功能可用！请开启日志服务器！");
-  log(get_text("log.enable"), [], "tip", 1);
-  log_config.able = true;
-
-  const createRequest = () => {
-    const request = new http.HttpRequest(config.log.address);
-    request.timeout = 10;
-    request.method = "Get";
-    return request;
-  };
-
-  const processBatchedLogs = () => {
-    if (!log_config.server) {
-      if (Date.now() - log_config.time > config.log.down * 1000) {
-        log_config.server = true;
-      } else {
-        return;
-      }
-    }
-
-    if (logs.length === 0) return;
-
-    const BATCH_SIZE = 10;
-
-    for (let i = 0; i < logs.length; i += BATCH_SIZE) {
-      const batch = logs.slice(i, i + BATCH_SIZE);
-
-      try {
-        const request = createRequest();
-        request.addHeader("usf", to_json(batch));
-
-        http.http.request(request)
-          .then((response) => {
-            if (response.body !== "usf") {
-              log_config.server = false;
-              log_config.time = Date.now();
+import("@minecraft/server-net").then((http)=>{
+    push_text("log.enable","当前日志功能可用！请开启日志服务器！")
+    log(get_text("log.enable"),[],"tip",1)
+    log_config.able = true
+    system.runInterval(()=>{
+        if(!log_config.server){
+            if(Date.now() - log_config.time > config.log.down*1000){
+                log_config.server = true
+            }else{
+                return
             }
-          })
-          .catch(() => { });
-      } catch (e) { }
-    }
-
-    logs = [];
-  };
-
-  const INTERVAL_TICKS = 20;
-  system.runInterval(processBatchedLogs, INTERVAL_TICKS);
-}).catch(() => { });
+        }
+        for(var op of logs){
+            var re  = new http.HttpRequest(config.log.address)
+            re = re.addHeader("usf",to_json(op))
+            re.timeout = 10
+            re.method = "Get"
+            http.http.request(re).then((r)=>{
+                if(r.body !== "usf"){
+                    log_config.server = false
+                    log_config.time = Date.now()
+                }
+            }).catch((err)=>{})
+        }
+        logs = []
+    },10)
+}).catch((err)=>{})
 
 var chat_board = {};
 
@@ -372,7 +352,7 @@ system_ids.particle = system.runInterval(() => {
     if (get_op_level(player) > 0) {
       const handItem = get_player_hand_item(player);
 
-      if (handItem && handItem.typeId === "minecraft:wooden_axe") {
+      if (handItem && handItem.typeId === "minecraft:wooden_axe" && config.other.fast_building) {
         const chosenBlocks = to_array(player.chosen_blocks);
         if (chosenBlocks && chosenBlocks.length > 0) {
           for (const block of chosenBlocks) {
@@ -1991,6 +1971,10 @@ function run_command(player, com) {
       cdBar(player);
     },
 
+    "unsIeep": () => {
+      editItemEvents(player);
+    },
+
     "die": () => {
       player.kill();
     },
@@ -2324,7 +2308,7 @@ function beforePlayerInteractWithBlock(event) {
     }
 
     if (!un(item)) {
-      if (item.typeId === "minecraft:wooden_axe") {
+      if (item.typeId === "minecraft:wooden_axe" && config.other.fast_building) {
         if (get_op_level(player) > 0) {
           if (player.isSneaking === false) {
             player.chosen_blocks = to_array(player.chosen_blocks)
@@ -3107,7 +3091,7 @@ function afterEntityHurt(event) {
             level = 10
           }
           var view = hurter.getViewDirection()
-          hurt.applyKnockback(view.x, view.z, 0.5 * (level + 1), 0.05 * (level + 1))
+          hurt.applyKnockback({x:view.x * 0.5 * (level + 1), z:view.z * 0.5 * (level + 1)},0.5)
         }
       }
 
@@ -3375,6 +3359,7 @@ function scriptEventReceive(event) {
         if (!has_owner) {
           save_data("owners", to_json([get_id(entity)]))
           get_owners()
+          log("初始化成功，您已获取最高op！使用钟点地面即可打开主菜单")
         } else {
           log("已存在owner，请在Server使用命令，或从其他owner处获取。")
         }
@@ -3448,12 +3433,12 @@ function run_special_command(player, words) {
     }
   }
   switch (words[0]) {
-    case "back":
-      if (!un(player.last_die)) {
-        var die = player.last_die
-        tp_entity(player, die.di, die.x, die.y, die.z, false)
-      }
-      break
+case "back":
+    if (!un(player.last_die)) {
+        const die = player.last_die;
+        tpWithAnimation(player, { x: die.x, y: die.y, z: die.z }, die.di);
+    }
+    break;
     case "commandblock":
       try {
         var block = player.dimension.getBlock({
@@ -3495,7 +3480,7 @@ function run_special_command(player, words) {
       }
       break
     case "knock":
-      player.applyKnockback(things[0], things[1], things[2], things[3])
+      player.applyKnockback({x:things[0] * things[2], z:things[1] * things[2]},things[3])
       break
     case "health":
       switch (things[0]) {
@@ -4088,12 +4073,17 @@ function is_public_editable(player) {
 
 function to_pos(player, pos) {
   if (Date.now() - player.last_tp < config.tp.down * 1000) {
-    tip(player, "传送功能冷却中...请稍后尝试！", "")
-    return
+    tip(player, "传送功能冷却中...请稍后尝试！", "");
+    return;
   }
-  tp_entity(player, get_di(pos.di), pos.x, pos.y, pos.z, true, false, true)
-  player.last_tp = Date.now()
-  emitEvent(player, "pos")
+  tpWithAnimation(player,
+    { x: pos.x, y: pos.y, z: pos.z },
+    world.getDimension(pos.di),
+    () => {
+      player.last_tp = Date.now();
+      emitEvent(player, "pos");
+    }
+  );
 }
 
 function get_pos_name(pos) {
@@ -4743,34 +4733,22 @@ function tpaRequest(goal, player, mode) {
   ui.btns = [{
     text: "同意Agree",
     icon: ui_icon.ok,
-    func: () => {
-      try {
-        if (!goal.tpa) {
-          throw new Error("传送请求已过期");
-        }
-
-        const { goal: requester, mode } = goal.tpa;
-        const target = mode === 0 ? goal : requester;
-        const source = mode === 0 ? requester : goal;
-
-        // 执行传送
-        source.teleport(
-          target.location,
-          {
-            dimension: target.dimension,
-            rotation: target.getRotation(),
-            facingLocation: target.location
-          }
-        );
-
-        chat("§a[传送系统]传送成功！", [requester, goal]);
-      } catch (e) {
-        console.error(`传送失败: ${e}`);
-        chat("§c[传送系统]传送失败: " + e.message, [player, goal]);
-      } finally {
-        delete goal.tpa;
-      }
-    }
+func: () => {
+  try {
+    if (!goal.tpa) throw new Error("传送请求已过期");
+    const { goal: requester, mode } = goal.tpa;
+    const target = mode === 0 ? goal : requester;
+    const source = mode === 0 ? requester : goal;
+    tpWithAnimation(source, target.location, target.dimension, () => {
+      chat("§a[传送系统]传送成功！", [requester, goal]);
+    });
+  } catch (e) {
+    console.error(`传送失败: ${e}`);
+    chat("§c[传送系统]传送失败: " + e.message, [player, goal]);
+  } finally {
+    delete goal.tpa;
+  }
+}
   }, {
     text: "拒绝Refuse",
     icon: ui_icon.delete,
@@ -6906,13 +6884,11 @@ function cdBar(player) {
 
 function get_date_now_China_time() {
   var d = new Date()
-  d = new Date(Date.now() + (8 - d.getTimezoneOffset()) * 3600000)
   return d.getTime()
 }
 
 function get_date_object_China_time() {
   var d = new Date()
-  d = new Date(Date.now() + (8 - d.getTimezoneOffset()) * 3600000)
   return d
 }
 
@@ -9208,6 +9184,7 @@ function usfFunctionBar(player, type) {
       ui.title = "其他功能设置"
       ui.toggle("chat_board", "留言板[禁用 | 启用]", config.other.chat_board)
       ui.toggle("other_mod_support", "其他模组支持[禁用 | 启用]", config.other.other_mod_support)
+      ui.toggle("fast_building", "小木斧[禁用 | 启用]", config.other.fast_building);
       break
     case "log":
       ui.title = "日志设置"
@@ -9307,7 +9284,7 @@ function usfFunctionBar(player, type) {
     case "daily":
       ui.title = "每日签到设置"
       ui.toggle("able", "每日签到[关闭 | 开启]", config.daily.able)
-      ui.input("command", '命令\n格式：["命令1","命令2"]', "输入命令", config.daily.command)
+      ui.input("command", '命令\n格式：["命令1","命令2"]，例如["scoreboard players add @s a 10"]', "输入命令", config.daily.command)
       break
     case "time":
       ui.title = "游戏时间统计"
@@ -9344,6 +9321,7 @@ function usfFunctionBar(player, type) {
       ui.toggle("group", "群组共享点[关闭 | 开启]", config.tp.group)
       ui.toggle("back", "传送返回[关闭 | 开启]", config.tp.back)
       ui.toggle("share", "分享传送点[关闭 | 开启]", config.tp.share)
+      ui.toggle("animation", "传送动画（实验性玩法）[关闭 | 开启]", config.tp.animation)
       ui.range("per_count", "个人传送点数量", 1, 55, 1, config.tp.per_count)
       ui.range("random_range", "随机传送距离(为0时不显示)", 0, 50000, 1000, config.tp.random_range)
       ui.toggle("random_end", "允许末地使用随机传送", config.tp.random_end)
@@ -9508,6 +9486,7 @@ function usfFunctionBar(player, type) {
         usfSettingBar(player)
         break
       case "pos":
+        config.tp.animation = r.animation
         config.tp.random_range = r.random_range
         config.tp.random_end = r.random_end
         config.tp.die = r.die
@@ -9525,6 +9504,7 @@ function usfFunctionBar(player, type) {
       case "other":
         config.other.chat_board = r.chat_board
         config.other.other_mod_support = r.other_mod_support
+        config.other.fast_building = r.fast_building
         save_config()
         usfSettingBar(player)
         break
@@ -9950,7 +9930,7 @@ function server_log(type, text, path) {
       type = "print"
       break
     case 2:
-      type = "info"
+      type = "log"
       text = to_json(text)
       break
   }
@@ -9963,3 +9943,4 @@ function server_log(type, text, path) {
   })
 
 }
+export { config };
