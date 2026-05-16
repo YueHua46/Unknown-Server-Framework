@@ -5,6 +5,7 @@ import { btnBar, infoBar, arrayEditor } from "./ui.js";
 import { ui_icon, usf_config, data_format, pictures } from "./data.js";
 import { performTeleportAnimation } from "./TpAni.js";
 import { tpWithAnimation } from "./TpAni.js";
+import { ScoreBoardGUI } from "./ScoreBoard.js";
 
 var config = {};
 var dictionary = {};
@@ -148,7 +149,7 @@ system.chat_board = system.runInterval(() => {
   }
 
   const board = world.scoreboard.getObjective("chat") ||
-    world.scoreboard.addObjective("chat", "聊天计分板");
+    world.scoreboard.addObjective("chat", "聊天记分板");
 
   chat_board = {};
 
@@ -277,36 +278,26 @@ system_ids.tran = system.runInterval(() => {
     tran_info.time = `${hours}:${minutes}:${seconds}`;
 
     try {
-      const scoreboards = {};
-
-      for (const boardConfig of reset_boards) {
-        const boardName = boardConfig[0];
-        const defaultScore = boardConfig[1];
-
-        if (!scoreboards[boardName]) {
-          scoreboards[boardName] = world.scoreboard.getObjective(boardName);
-        }
-
-        const board = scoreboards[boardName];
-
-        if (board) {
-          for (const player of players) {
-            if (player.scoreboardIdentity) {
-              try {
-                const score = board.getScore(player);
-                if (score === undefined) {
-                  board.setScore(player, defaultScore);
-                }
-              } catch (err) {
-                try {
-                  board.setScore(player, defaultScore);
-                } catch (innerErr) { }
-              }
-            }
-          }
-        }
-      }
-    } catch (err) { }
+      let scoreBoardDL = JSON.parse(mc.world.getDynamicProperty("usf:scoreboardDefaultValue"));
+    	for (let sb_defaultValue of scoreBoardDL) {
+      	let scoreBoard = mc.world.scoreboard.getObjective(sb_defaultValue.id);
+      	if (scoreBoard == null) {
+      	  scoreBoardDL = scoreBoardDL.filter(sb => {
+      	  	if (sb.id === sb_defaultValue.id) {
+            	return false;
+          	}
+          	return true;
+        	});
+        	mc.world.setDynamicProperty("usf:scoreboardDefaultValue", JSON.stringify(scoreBoardDL));
+        	continue;
+      	};
+      	for (let player of mc.world.getAllPlayers()) {
+        	if (!scoreBoard.hasParticipant(player)) {
+          	scoreBoard.setScore(player, sb_defaultValue.value);
+        	}
+      	}
+    	}
+    } catch (err) { console.log(err)}
   } catch (err) { }
 }, 40);
 
@@ -4281,7 +4272,7 @@ function tranBar(player) {
             players[r.p].runCommand(`scoreboard players add @s ${obs[r.id].id} ${String(count)}`)
             player.runCommand(`scoreboard players remove @s ${obs[r.id].id} ${String(Math.ceil(count * (1 + config.tran.free / 100)))}`)
             chat("§e[转账机]转账成功！", [player])
-            chat("§e[转账机]您收到一笔转账！金额：" + String(count), [players[r.p]])
+            chat("§e[转账机]您收到一笔转账！金额：" + player.name + "\n金额:" + String(count), [players[r.p]])
           } else {
             chat("§e[转账机]余额不足！", [player])
           }
@@ -4775,7 +4766,7 @@ function landBar(player, goal) {
   ui.title = "领地管理"
 
   if (un(world.scoreboard.getObjective(config.land.board))) {
-    confirm(player, "记分版配置错误！领地功能无法使用！")
+    confirm(player, "记分板配置错误！领地功能无法使用！")
     return
   }
 
@@ -5155,7 +5146,7 @@ function manageStoreBar(player, type = 0) {
           manageStoreBar(player, 0)
         }
         ui2.title = "币种"
-        ui2.input("moneys", "统计货币的记分版，多个记分版直接用英文分号;间隔，币种名即为记分版名称", "输入记分版ID", config.store.moneys)
+        ui2.input("moneys", "统计货币的记分板，多个记分板直接用英文分号;间隔，币种名即为记分板名称", "输入记分板ID", config.store.moneys)
         ui2.show(player, (r) => {
           config.store.moneys = r.moneys
           save_config()
@@ -5175,7 +5166,7 @@ function manageStoreBar(player, type = 0) {
         `2.抽取箱子中的物品。物品的数量即为抽到该物品的权重，若物品不可堆叠,则这个物品的下一个物品不在抽取范围内,下一个物品的数量为这个物品的权重。箱子必须在主世界的常加载区块。\n格式:{"x":x坐标,"y":y坐标,"z":z坐标,"c":物品数量}"\n例：{"x":0,"y":0,"z":0,"c":5}`,
         `3.传送。\n格式:{"tp":"tp命令的坐标格式"}\n例如:{"tp":"100 25 67"}、{"tp":"~ ~1000 ~"}`,
         `4.执行命令\n格式:{"command":["命令1","命令2","命令3"]}  以此类推\n例如:{"command":["say hello","say hi"]}`,
-        `§e注意：代码无效不会返还物品、记分版分数，所以请测试一下代码是否能正常运行！`
+        `§e注意：代码无效不会返还物品、记分板分数，所以请测试一下代码是否能正常运行！`
       ]), () => {
         manageStoreBar(player, type)
       })
@@ -5360,7 +5351,7 @@ function editGoodBar(player, type, good, save = function () { }) {
   ui.input("update_time", "刷新间隔时间/秒(仅选择\"隔固定时间刷新\"才填)", "时间/秒", String(good.update_time))
   ui.options("money", "币种", moneys, array_has(moneys, good.money) ? moneys.indexOf(good.money) : 0)
   ui.input("money_item", "以物易物时用于交换的物品ID", "", good.money_item)
-  ui.input("price", "单价(记分版分数/交换物品数量)", "价格必须为整数或0", String(good.price))
+  ui.input("price", "单价(记分板分数/交换物品数量)", "价格必须为整数或0", String(good.price))
   add_pictures_choice(ui, "预选图标（预选图标优先级大于自定义图标）", good.icon)
   ui.input("custom_icon", "自定义路径图标", "输入路径，如textures/items/totem.png", good.custom_icon)
   ui.input("name", "交易(或物品)名称", "输入名称", good.name)
@@ -7164,7 +7155,7 @@ function createLandBar(player) {
   }
 
   if (un(player.scoreboardIdentity)) {
-    show_title(player, "无法初始化记分版\n请重进游戏")
+    show_title(player, "无法初始化记分板\n请重进游戏")
     return
   }
 
@@ -7233,10 +7224,8 @@ function createLandBar(player) {
       "price": price,
     }
 
-    if (is_bool(r.public)) {
-      if (r.public === true) {
-        land.public = true
-      }
+    if (r.public === true) {
+      land.public = r.public
     } else {
       board.setScore(player, to_number(board.getScore(player)) - price)
     }
@@ -8241,9 +8230,9 @@ function save_ops() {
 
 function OnlineBoardBar(player) {
   var ui = new infoBar()
-  ui.title = "剔除离线玩家记分版"
-  var text = `输入要剔除离线玩家的记分版ID，多个记分版之间用英文分号;间隔开\n设置后,系统会生成一个下划线_后缀的记分版，这个记分版就是剔除离线玩家的记分版\n例如： Money >> Money_`
-  ui.input("r", text, "记分版id,多个之间用;隔开", config.copy_boards)
+  ui.title = "剔除离线玩家记分板"
+  var text = `输入要剔除离线玩家的记分板ID，多个记分板之间用英文分号;间隔开\n设置后,系统会生成一个下划线_后缀的记分板，这个记分板就是剔除离线玩家的记分板\n例如： Money >> Money_`
+  ui.input("r", text, "记分板id,多个之间用;隔开", config.copy_boards)
   ui.show(player, (r) => {
     config.copy_boards = r.r
     save_config()
@@ -8339,8 +8328,8 @@ function chatByBoardBar(player) {
   ui.cancel = () => {
     usfSettingBar(player)
   }
-  ui.title = "计分板聊天室"
-  ui.toggle("able", "计分板聊天室\n启用后会生成一个id为chat的计分板\n计分板分数相同的人进行单独群聊\n[禁用|启用]", config.chat_board.able)
+  ui.title = "记分板聊天室"
+  ui.toggle("able", "记分板聊天室\n启用后会生成一个id为chat的记分板\n记分板分数相同的人进行单独群聊\n[禁用|启用]", config.chat_board.able)
   ui.show(player, (r) => {
     config.chat_board.able = r.able
     save_config()
@@ -8469,13 +8458,13 @@ function usfSettingBar(player) {
       limitSetBar(player)
     }
   }, {
-    text: "计分板聊天室",
+    text: "记分板聊天室",
     icon: ui_icon.player,
     func: () => {
       chatByBoardBar(player)
     }
   }, {
-    text: "记分版自动剔除离线玩家设置",
+    text: "记分板自动剔除离线玩家设置",
     icon: ui_icon.ping,
     func: () => {
       OnlineBoardBar(player)
@@ -8502,15 +8491,15 @@ function usfSettingBar(player) {
     }
   },
   {
-    text: "记分版计时器",
+    text: "记分板计时器",
     icon: ui_icon.speed,
     func: () => {
       var ui2 = new infoBar()
-      ui2.title = "记分版计时器"
+      ui2.title = "记分板计时器"
       ui2.cancel = () => {
         usfSettingBar(player)
       }
-      ui2.input("id", "记分版计时器\n注意：只能设置一个记分版作为计时器\n设置后，当记分版有分数>0时，自动开始倒计时，直到分数为-1停下\n设置后，当记分版有分数为-2时，自动开始正计时，直到分数被设置为0或-1\n插件重载/游戏重启后自动清空整个记分版\n\n记分版ID", "输入ID", config.timer)
+      ui2.input("id", "记分板计时器\n注意：只能设置一个记分板作为计时器\n设置后，当记分板有分数>0时，自动开始倒计时，直到分数为-1停下\n设置后，当记分板有分数为-2时，自动开始正计时，直到分数被设置为0或-1\n插件重载/游戏重启后自动清空整个记分板\n\n记分板ID", "输入ID", config.timer)
       ui2.show(player, (r) => {
         config.timer = r.id
         save_config()
@@ -8565,11 +8554,11 @@ function usfSettingBar(player) {
       usfFunctionBar(player, "hurttip")
     }
   }, {
-    text: "记分版默认值",
-    icon: ui_icon.scoreboard,
-    func: () => {
-      usfFunctionBar(player, "reset")
-    }
+  	text: "记分板编辑",
+  	icon: "textures/ui/hanging_sign.png",
+  	func: ()=>{
+  		new ScoreBoardGUI().sendToPlayer(player);
+  	}
   }, {
     text: "群组设置",
     icon: ui_icon.group,
@@ -8870,15 +8859,15 @@ function setLockBar(player) {
 
 function resetBoardBar(player) {
   var ui = new btnBar()
-  ui.title = "记分版默认值设置"
+  ui.title = "记分板默认值设置"
   ui.cancel = () => {
     usfSettingBar(player)
   }
-  ui.body = ["当玩家记分版无值时，插件自动给予默认值"]
+  ui.body = ["当玩家记分板无值时，插件自动给予默认值"]
   for (var i = 0; i < reset_boards.length; i++) {
     var b = reset_boards[i]
     ui.btns.push({
-      text: `记分版:${b[0]}\n默认值:${b[1]}`,
+      text: `记分板:${b[0]}\n默认值:${b[1]}`,
       op: {
         index: i
       },
@@ -8889,7 +8878,7 @@ function resetBoardBar(player) {
           resetBoardBar(player)
         }
         ui2.title = "设置默认值"
-        ui2.input("id", "记分版ID", "输入id", bd[0])
+        ui2.input("id", "记分板ID", "输入id", bd[0])
         ui2.input("value", "默认值", "输入整数", String(bd[1]))
         ui2.toggle("de", "删除", false)
         ui2.show(player, (r) => {
@@ -8917,7 +8906,7 @@ function resetBoardBar(player) {
         resetBoardBar(player)
       }
       ui2.title = "设置默认值"
-      ui2.input("id", "记分版ID", "输入id", "")
+      ui2.input("id", "记分板ID", "输入id", "")
       ui2.input("value", "默认值", "输入整数", "0")
       ui2.show(player, (r) => {
         reset_boards.push([r.id, to_number(parseInt(r.value))])
@@ -9142,7 +9131,7 @@ function editScorePage(player, tag, page, first = false) {
     "玩家死亡", "玩家切换维度", "破坏方块", "放置方块", "造成伤害", "生命值", "杀死实体", "加入游戏", "购买物品金额", "收购物品金额", "玩家受伤的血量(约为整数)", "玩家受伤次数", "击杀敌对生物"
   ], array_index(data_format.score, page.type))
 
-  ui.input("board", "记分版ID", "输入记分版", page.board)
+  ui.input("board", "记分板ID", "输入记分板", page.board)
   ui.input("data", "限制数据\n" + text, "输入限制数据", page.data)
   if (!first) {
     ui.toggle("d", "删除", false)
@@ -9176,9 +9165,9 @@ function usfFunctionBar(player, type) {
 
   switch (type) {
     case "online":
-      ui.title = "在线记分版"
-      var text = "下面填入只需要显示在线玩家的记分版id，多个id用;隔开\n插件会自动生成id\"名字_\"的记分版，这个记分版就是只显示在线玩家的记分版\n例如:Show记分版将生成Show_记分版"
-      ui.input("online", text, "输入记分版id", config.other.online)
+      ui.title = "在线记分板"
+      var text = "下面填入只需要显示在线玩家的记分板id，多个id用;隔开\n插件会自动生成id\"名字_\"的记分板，这个记分板就是只显示在线玩家的记分板\n例如:Show记分板将生成Show_记分板"
+      ui.input("online", text, "输入记分板id", config.other.online)
       break
     case "other":
       ui.title = "其他功能设置"
@@ -9234,9 +9223,9 @@ function usfFunctionBar(player, type) {
       ui.title = "领地设置"
       ui.toggle("able", "[禁用 | 启用]", config.land.able)
       ui.range("max", "可创建领地数量(管理员可无限创建)", 0, 100, 1, config.land.max)
-      ui.input("board", "领地扣费记分版id", "输入id", config.land.board)
+      ui.input("board", "领地扣费记分板id", "输入id", config.land.board)
       ui.range("price", "领地价格/每方块(最后价格约成整数)", 0, 10, 1, config.land.price)
-      ui.toggle("must", "金额必须足够(若关闭，则记分版可能会被扣费成负数)", config.land.must)
+      ui.toggle("must", "金额必须足够(若关闭，则记分板可能会被扣费成负数)", config.land.must)
       ui.input("show", "领地提示语(/name转换为领地主名字)", "输入提示语", config.land.show)
       ui.toggle("mode", "进入领地强制冒险模式(管理员不受限)", config.land.mode)
       break
@@ -9278,17 +9267,17 @@ function usfFunctionBar(player, type) {
     case "tran":
       ui.title = "转账机功能设置"
       ui.toggle("able", "转账机[关闭 | 开启]", config.tran.able)
-      ui.input("board", "转账的记分版，多个之间用英文分号;分隔", "输入记分版ID", config.tran.board)
+      ui.input("board", "转账的记分板，多个之间用英文分号;分隔", "输入记分板ID", config.tran.board)
       ui.range("free", "手续费(百分比)", 0, 200, 1, config.tran.free)
       break
     case "daily":
       ui.title = "每日签到设置"
       ui.toggle("able", "每日签到[关闭 | 开启]", config.daily.able)
-      ui.input("command", '命令\n格式：["命令1","命令2"]，例如["scoreboard players add @s a 10"]', "输入命令", config.daily.command)
+      ui.input("command", '命令\n格式：["命令1","命令2"]，例如["scoreboard players add @s a 10"]', "输入命令", config.daily.command);
       break
     case "time":
       ui.title = "游戏时间统计"
-      ui.toggle("able", "游戏时间统计[关闭 | 开启]\n游戏时间的记分版id为time\n显示时间的记分版id为time_show", config.time.able)
+      ui.toggle("able", "游戏时间统计[关闭 | 开启]\n游戏时间的记分板id为time\n显示时间的记分板id为time_show", config.time.able)
       ui.options("type", "统计时间", ["每秒", "每分钟"], config.time.type)
       ui.toggle("show", "显示时间并锁定在玩家列表", config.time.show)
       break
@@ -9425,7 +9414,7 @@ function usfFunctionBar(player, type) {
         config.land.mode = r.mode
         save_config()
         if (un(world.scoreboard.getObjective(config.land.board))) {
-          confirm(player, "刚才配置的记分版不存在！领地功能无法使用！", () => {
+          confirm(player, "刚才配置的记分板不存在！领地功能无法使用！", () => {
             usfSettingBar(player)
           })
         } else {
@@ -9943,4 +9932,4 @@ function server_log(type, text, path) {
   })
 
 }
-export { config };
+export { config, usfSettingBar };
