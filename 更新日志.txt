@@ -1,6 +1,6 @@
 插件作者：EarthDLL(earthdll@outlook.com)
 管理员：悠米看悠米
-插件名：无名氏牌服务器插件(Unkown Server FrameWork)
+插件名：无名氏牌服务器插件(Unknown Server FrameWork)
 
 在不侵犯作者版权情况下，可自行修改、分发、二次修改、二次分发
 禁止以付费形式传播本插件主体部分(包含日志)

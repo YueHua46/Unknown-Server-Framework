@@ -1,4 +1,4 @@
-# UnknowServerFramework (USF)
+# UnknownServerFramework (USF)
 
 > [!IMPORTANT]
 > This README is translated by AI tools. Some parts may not be accurate. USF does not officially support English now.
@@ -10,7 +10,7 @@
 
 ---
 
-### UnknowServerFramework (USF)
+### UnknownServerFramework (USF)
 
 Based on Minecraft Bedrock Edition ScriptAPI.
 
@@ -24,7 +24,7 @@ Designed for Minecraft BE official servers (BDS), personal archives, LLSE and Re
 **Author:** EarthDLL (USFrameTeam)  
 **Maintainer:** USFrameTeam  
 **Special thanks to the following contributors for their support:**  
-XiaoXiaoYang, Antonbin, 小洋澈, Ice_rink  
+XiaoXiaoYang, Antonbin, 小洋澈，Ice_rink  
 **Special Gratitude:** To all group members
 
 Official resource links:  

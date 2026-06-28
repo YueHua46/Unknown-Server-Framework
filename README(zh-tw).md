@@ -4,7 +4,7 @@
 
 ---
 
-### UnknowServerFramework(USF)
+### UnknownServerFramework (USF)
 
 基於原版 Minecraft Bedrock Edition ScriptAPI
 
@@ -15,7 +15,7 @@ https://github.com/YYTZ666/usfdown/tree/main/files/main
 
 適用於 MinecraftBE 官方伺服器（BDS）、個人存檔、LLSE 和 Realms 的生存輔助、伺服器管理插件
 
-作者：EarthDLL(USFrameTeam)  
+作者：EarthDLL (USFrameTeam)  
 維護：USFrameTeam  
 感謝以下社區貢獻者的維護：  
 XiaoXiaoYang、Antonbin、小洋澈、Ice_rink  
@@ -50,13 +50,13 @@ USF 文件站（官方站點）：
 
 ## ① 傳送系統:  
 - 返回死亡點  
-- 玩家TP  
+- 玩家 TP  
 - 固定傳送點（管理員設定）  
 - 世界共享點（玩家設定）  
 - 個人傳送點  
 - 群組共享點  
 - 隨機傳送  
-- Home功能  
+- Home 功能  
 
 ## ② 群組系統:  
 - 群組歷史消息  
@@ -95,4 +95,4 @@ USF 文件站（官方站點）：
 - 聊天顯示格式修改  
 - 傳送點／領地／群組設定  
 - 插件內置命令設定  
-- 插件主選單打開方式設定  
+- 插件主選單打開方式設定

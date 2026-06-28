@@ -3,10 +3,10 @@ USF V2 服务器日志功能使用方法：
 提醒：该功能只能用于BDS服务端！存档与Realm无法使用
 
 一、前置准备
-    2.网上搜索NodeJS并下载系统对应版本
+    1.网上搜索NodeJS并下载系统对应版本
     (Windows : https://nodejs.org/dist/v20.11.0/node-v20.11.0-x64.msi)(64位系统)
     (Linux : https://nodejs.org/dist/v20.11.0/node-v20.11.0-linux-x64.tar.xz)(X86系统)(其他类型的系统自行前往官网)
-    3.安装NodeJS
+    2.安装NodeJS
     (Windows:双击打开安装包即可安装)
     (Linux:见https://blog.csdn.net/qq_45830276/article/details/126022778)
 
