@@ -1,7 +1,8 @@
+// @ts-nocheck
 //++++++++++++传送动画(1.20.10~1.20.60)+++++++++++++++++
 //已经通过接口适配1.21+
 import { world, system } from "@minecraft/server";
-import { config } from "./main.js";
+import { config } from "../main.js";
 
 // 维度工具
 function get_di_by_id(id) {

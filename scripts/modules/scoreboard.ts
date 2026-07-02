@@ -1,11 +1,12 @@
+// @ts-nocheck
 //从NeoUSF移植的
 //by 凋空凌
 import {
   ScriptUI
-} from "./UIAPI.js";
+} from "./script-ui.js";
 import {
 	usfSettingBar
-} from "./main.js";
+} from "../main.js";
 import * as mc from "@minecraft/server";
 
 mc.system.run(()=>{

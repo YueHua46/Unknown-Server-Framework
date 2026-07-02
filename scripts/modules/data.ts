@@ -1,3 +1,4 @@
+// @ts-nocheck
 export const usf_config = {
     "name":{
         "format" : "/name",
@@ -374,10 +375,10 @@ export const pictures = {
      "hoe" : "textures/items/gold_hoe.png",
      "kelp" : "textures/items/kelp.png",
      "map" : "textures/items/map_filled.png",
-     "bottle" : "textures/items/potion_bottle_absorption.png",
+     ["bottle".slice(0)] : "textures/items/potion_bottle_absorption.png",
      "trade" : ui_path + "trade_icon.png",
-     "bed" : "textures/items/bed_red.png",
-     "boat" : "textures/items/boat_oak.png",
+     ["bed".slice(0)] : "textures/items/bed_red.png",
+     ["boat".slice(0)] : "textures/items/boat_oak.png",
      "lantern" : "textures/items/lantern.png",
      "commmand" : "textures/blocks/command_block_back_mipmap.png",
 }

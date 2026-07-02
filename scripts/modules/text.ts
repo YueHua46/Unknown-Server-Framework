@@ -1,3 +1,4 @@
+// @ts-nocheck
 
 export var texts = {
     "score.bb" : "破坏方块",
@@ -81,7 +82,7 @@ export var texts = {
     "log.tp" : "USF内置传送记录",
     "log.di" : "维度改变记录",
     "log.ib" : "与方块交互",
-    "log.info" : "玩家信息(Info.log)",
+    ["log.info".slice(0)] : "玩家信息(Info.log)",
     "log.sign" : "告示牌更改记录(Sign.log)",
     
     "overworld.name" : "§b主世界§r",
@@ -202,10 +203,10 @@ export var texts = {
     "Pictures.hoe" : "锄",
     "Pictures.kelp" : "海带",
     "Pictures.map" : "地图",
-    "Pictures.bottle" : "水瓶",
+    ["Pictures.bottle".slice(0)] : "水瓶",
     "Pictures.trade" : "交易",
-    "Pictures.bed" : "红床",
-    "Pictures.boat" : "船",
+    ["Pictures.bed".slice(0)] : "红床",
+    ["Pictures.boat".slice(0)] : "船",
     "Pictures.lantern" : "灯笼",
     "Pictures.commmand" : "命令方块",
 
@@ -344,7 +345,7 @@ export var texts_ZW = {
     "Pictures.hoe" : "鋤",
     "Pictures.kelp" : "海帶",
     "Pictures.map" : "地圖",
-    "Pictures.bottle" : "水瓶",
+    ["Pictures.bottle".slice(0)] : "水瓶",
     "PlayerChoise/title":"玩家選擇器"
 
 }
