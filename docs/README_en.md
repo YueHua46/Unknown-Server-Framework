@@ -1,106 +1,115 @@
-# UnknownServerFramework (USF)
+# Unknown Server Framework
 
 > [!IMPORTANT]
-> This README is translated by AI tools. Some parts may not be accurate. USF does not officially support English now.
-> If you want to use USF, you can modify it as long as you comply with the GPL license.
+> This README was translated with AI assistance. Some wording may be inaccurate. USF does not officially provide English support yet.
+>
+> You may modify and redistribute USF as long as you comply with the GPL license.
 
-<img src="https://www.minebbs.com/data/resource_icons/5/5475.jpg?1744165413" title="USF">
+<p align="center">
+  <img src="https://www.minebbs.com/data/resource_icons/5/5475.jpg?1744165413" alt="USF" width="360" />
+</p>
 
-[中文说明](/README.md)
+<p align="center">
+  <strong>A survival utility and server management framework based on Minecraft Bedrock Edition ScriptAPI.</strong>
+</p>
 
----
-
-### UnknownServerFramework (USF)
-
-Based on Minecraft Bedrock Edition ScriptAPI.
-
-**Latest version:** __USF0.7.21F__  
-Note: The repository version may lag behind or be newer than the official release.  
-All plugin versions are available in the YYTZ666/usfdown repository:  
-https://github.com/YYTZ666/usfdown/tree/main/files/main
-
-Designed for Minecraft BE official servers (BDS), personal archives, LLSE and Realms as a survival aid and server management plugin.
-
-**Author:** EarthDLL (USFrameTeam)  
-**Maintainer:** USFrameTeam  
-**Special thanks to the following contributors for their support:**  
-XiaoXiaoYang, Antonbin, 小洋澈，Ice_rink  
-**Special Gratitude:** To all group members
-
-Official resource links:  
-https://www.minebbs.com/threads/usf.17109/  
-https://klpbbs.com/thread-131213-1-1.html
+<p align="center">
+  <a href="../README.md">中文说明</a>
+  ·
+  <a href="README_tw.md">繁體中文</a>
+</p>
 
 ---
 
-## USFrameTeam Official Website
-Visit the USFrameTeam website for more information about USF and quick access:  
-[→ Visit Now](https://www.usframeteam.top/)
+## Overview
 
-## USF Documentation Sites
-Official Documentation Sites:  
-- Main site: https://usfdoc.pages.dev/  
-- Domain: https://usfdocs.usframeteam.top/  
-- Backup: https://docs.usframeteam.top/  
+Unknown Server Framework（USF）is designed for Minecraft BE official servers（BDS）, personal worlds, LLSE, and Realms. It provides survival utilities and server management features.
 
-## USF Download Sites
-- Main domain: d.usframeteam.top  
-- Redirect: usfdown.usframeteam.top  
-- Backup: usfdown.zuyst.top  
+> The repository version may lag behind or be newer than the official release. All plugin versions are available in the YYTZ666/usfdown repository.
+
+| Item           | Information                              |
+| -------------- | ---------------------------------------- |
+| Latest version | **USF0.7.21F**                           |
+| Author         | EarthDLL（USFrameTeam）                  |
+| Maintainer     | USFrameTeam                              |
+| Contributors   | XiaoXiaoYang, Antonbin, 小洋澈, Ice_rink |
+| Special thanks | All group members                        |
+
+## Official Resources
+
+| Type                    | Link                                                                           |
+| ----------------------- | ------------------------------------------------------------------------------ |
+| All versions            | [YYTZ666/usfdown](https://github.com/YYTZ666/usfdown/tree/main/files/main)     |
+| MineBBS                 | [minebbs.com/threads/usf.17109](https://www.minebbs.com/threads/usf.17109/)    |
+| KLPBBS                  | [klpbbs.com/thread-131213-1-1.html](https://klpbbs.com/thread-131213-1-1.html) |
+| USFrameTeam website     | [usframeteam.top](https://www.usframeteam.top/)                                |
+| Documentation main site | [usfdoc.pages.dev](https://usfdoc.pages.dev/)                                  |
+| Documentation domain    | [usfdocs.usframeteam.top](https://usfdocs.usframeteam.top/)                    |
+| Documentation backup    | [docs.usframeteam.top](https://docs.usframeteam.top/)                          |
+
+## Download Sites
+
+| Type        | Domain                    |
+| ----------- | ------------------------- |
+| Main domain | `d.usframeteam.top`       |
+| Redirect    | `usfdown.usframeteam.top` |
+| Backup      | `usfdown.zuyst.top`       |
 
 ---
 
-# Existing Systems / Features
+## Features
 
-Teleport system, group system, land/territory system, announcement system, management functions  
-Details:
+USF currently includes teleport, group, land/territory, announcement, and management systems.
 
-## ① Teleport System
+### Teleport System
+
 - Return to death point
-- Player teleport (TP)
-- Fixed teleport points (set by admin)
-- World shared points (set by player)
+- Player teleport（TP）
+- Fixed teleport points（set by administrators）
+- World shared points（set by players）
 - Personal teleport points
 - Group shared points
 - Random teleport
 - Home feature
 
-## ② Group System
-- Group history messages
+### Group System
+
+- Group message history
 - In-group chat
 - Land/territory sharing
 
-## ③ Land/Territory System
-- Set open members/teams
-- Set public lands
+### Land / Territory System
 
-## ④ Announcement Feature
+- Configure open members / teams
+- Configure public lands
+
+### Announcement System
+
 - Multiple announcements
-- Top/pinned announcements
+- Pinned announcements
 - New member announcements
 
-## ⑤ Management Functions
-- Backpack inspection
+### Management Functions
+
+- Inventory inspection
 - Perspective tracking
 - Land/territory management
-- Ban entities
-- Edit administrators
-- Edit ban list
-- Mute/block
-- Set titles
-
----
+- Entity bans
+- Administrator editing
+- Ban list editing
+- Mute / block
+- Title settings
 
 ## Plugin Settings
 
-- Set entry prompt message
-- Set game assistant functions
+- Entry prompt message
+- Game assistant functions
 - Log system
-- Default leaderboard values
+- Default scoreboard values
 - Score system
 - Health display
-- Modify player name format
-- Modify chat display format
-- Teleport/territory/group settings
+- Player name format
+- Chat display format
+- Teleport / territory / group settings
 - Built-in command settings
-- Main menu opening mode settings
+- Main menu opening mode
