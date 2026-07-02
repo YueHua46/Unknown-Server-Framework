@@ -742,7 +742,7 @@ bug修复：
 
 
 修改：B/entities/bat.json
-修改：B/scripts/Main.js
+修改：B/scripts/main.js
 
 Made by EarthDLL™
 
@@ -755,7 +755,7 @@ USF0.3.2(B)更新：
 3.完善反推万物活塞
 4.现在可修改违禁物品、严禁放置方块、严禁破坏方块
 
-文件修改：B/enties/Main.js
+文件修改：B/enties/main.js
 
 Made by EarthDLL™
 
@@ -784,7 +784,7 @@ Bug修复
 
 文件修改：
 新增：B/entities/bat.json
-修改：B/scripts/Main.js
+修改：B/scripts/main.js
 
 Made by EarthDLL™
 

@@ -1,11 +1,12 @@
-<img src=https://www.minebbs.com/data/resource_icons/5/5475.jpg?1744165413 title="USF">  
+# Unknown-Server-Framework
 
-[English](docs/README_en.md)
-[繁體中文 (中国台湾)](docs/README_tw.md)
-
-### UnknownServerFramework (USF)
+<img src="docs/assets/usf.jpg" title="USF">
 
 基于原版 MinecraftBedrockEdition ScriptAPI
+
+文档：[English](docs/README_en.md) | [繁體中文 (中国台湾)](docs/README_tw.md)
+
+[项目框架参考](https://github.com/microsoft/minecraft-scripting-samples/tree/main/ts-starter)
 
 最新版本：__USF0.8.0F__  
 当前仓库版本可能落后于最新版本或者比最新版本新  

@@ -5,7 +5,7 @@ import {
 } from "./UIAPI.js";
 import {
 	usfSettingBar
-} from "./Main.js";
+} from "./main.js";
 import * as mc from "@minecraft/server";
 
 mc.system.run(()=>{
