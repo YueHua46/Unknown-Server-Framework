@@ -1,7 +1,7 @@
 # Unknown Server Framework
 
 <p align="center">
-  <img src="https://www.minebbs.com/data/resource_icons/5/5475.jpg?1744165413" alt="USF" width="360" />
+  <img src="assets/usf.jpg" alt="USF" width="360" />
 </p>
 
 <p align="center">
