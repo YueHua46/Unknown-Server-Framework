@@ -15,6 +15,7 @@ import {
   getOrThrowFromProcess,
   watchTask,
 } from "@minecraft/core-build-tasks";
+import fs from "fs";
 import path from "path";
 
 // Setup env variables
@@ -23,6 +24,8 @@ const projectName = getOrThrowFromProcess("PROJECT_NAME");
 
 // You can use `npm run build:production` to build a "production" build that strips out statements labelled with "dev:".
 const isProduction = argv()['production'];
+const resourcePackPath = `./resource_packs/${projectName}`;
+const hasResourcePack = fs.existsSync(path.resolve(__dirname, resourcePackPath));
 
 const bundleTaskOptions: BundleTaskParameters = {
   entryPoint: path.join(__dirname, "./scripts/main.ts"),
@@ -37,7 +40,7 @@ const bundleTaskOptions: BundleTaskParameters = {
 const copyTaskOptions: CopyTaskParameters = {
   copyToBehaviorPacks: [`./behavior_packs/${projectName}`],
   copyToScripts: ["./dist/scripts"],
-  copyToResourcePacks: [`./resource_packs/${projectName}`],
+  copyToResourcePacks: hasResourcePack ? [resourcePackPath] : [],
 };
 
 const mcaddonTaskOptions: ZipTaskParameters = {
